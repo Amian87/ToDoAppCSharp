@@ -3,5 +3,6 @@ solution: ToDoAppConsole.sln
 mono: none
 dotnet: 2.1.502
 script:
+  - cd ToDoAppConsole
   - dotnet restore
   - dotnet test
