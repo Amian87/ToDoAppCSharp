@@ -4,12 +4,12 @@ using ToDoApp;
 
 namespace ToDoAppTests
 {
-    public class CreateToDoTests
+    public class ToDoTests
     {
         [Test]
         public void CreateToDo()
         {
-            CreateToDo create_todo = new CreateToDo();
+            ToDo todo = new ToDo();
         }
 
     }

@@ -2,7 +2,7 @@
 
 namespace ToDoApp
 {
-    public class CreateToDo
+    public class ToDo
     {
     }
 }
