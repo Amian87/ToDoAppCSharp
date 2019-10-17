@@ -24,7 +24,38 @@ namespace ToDoApp
             return taskDictionary;
         }
 
-        
+        public void DisplayTasksOnConsole()
+        {
+            foreach(var(taskNumber, task) in taskDictionary)
+            {
+                Console.WriteLine($"{taskNumber} - {task}");
+            }
+        }
 
+        public void ToDoAppLoop()
+        {
+            bool status = true;
+
+            Console.Write("Welcome To To-Do App");
+            Console.Write("  ---- Press enter -----");
+
+            do
+            {
+                
+                if(Console.ReadLine().ToLower().ToString() == "exit")
+                {
+                    status = false;
+                }
+                else
+                {
+                    Console.Write("Create a task >> ");
+                    CreateTask(Console.ReadLine().ToString());
+                    Console.Clear();
+                    Console.WriteLine("Your tasks");
+                    DisplayTasksOnConsole();
+                }
+            } while (status);
+
+        }
     }
 }
