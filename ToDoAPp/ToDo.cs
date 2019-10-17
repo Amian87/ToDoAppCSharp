@@ -35,25 +35,26 @@ namespace ToDoApp
         public void ToDoAppLoop()
         {
             bool status = true;
+            string userInput = "";
 
-            Console.Write("Welcome To To-Do App");
-            Console.Write("  ---- Press enter -----");
+            Console.WriteLine("Welcome To The To-Do App");
 
             do
             {
-                
-                if(Console.ReadLine().ToLower().ToString() == "exit")
+                if (userInput.ToLower() == "exit")
                 {
                     status = false;
                 }
                 else
                 {
                     Console.Write("Create a task >> ");
-                    CreateTask(Console.ReadLine().ToString());
+                    userInput = Console.ReadLine().ToString();
+                    CreateTask(userInput);
                     Console.Clear();
                     Console.WriteLine("Your tasks");
                     DisplayTasksOnConsole();
                 }
+
             } while (status);
 
         }
