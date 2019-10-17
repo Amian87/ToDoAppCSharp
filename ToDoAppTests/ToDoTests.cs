@@ -33,13 +33,11 @@ namespace ToDoAppTests
         [Test]
         public void CreateThreeTasks()
         {
-            string task1 = "this is task1";
-            string task2 = "this is task2";
-            string task3 = "this is task3";
-            todo.CreateTask(task1);
-            todo.CreateTask(task2);
-            todo.CreateTask(task3);
-            Assert.AreEqual(task1, todo.ListOfTasks()[1]);
+            string task = "this is task";
+            CreateMultipleTasks(3, task);
+            Assert.AreEqual(task, todo.ListOfTasks()[1]);
+            Assert.AreEqual(task, todo.ListOfTasks()[2]);
+            Assert.AreEqual(task, todo.ListOfTasks()[3]);
         }
 
 
