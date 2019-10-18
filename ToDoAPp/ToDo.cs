@@ -5,23 +5,29 @@ namespace ToDoApp
 {
     public class ToDo
     {
-        private Dictionary<int, string> taskDictionary = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> taskDictionary = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> menuDictionary = new Dictionary<int, string>();
 
         public void CreateTask(string task)
         {
             if(taskDictionary.ContainsKey(taskDictionary.Count))
             {
-                ListOfTasks().Add(taskDictionary.Count + 1, task);
+                TasksDictionary().Add(taskDictionary.Count + 1, task);
             }
             else
             {
-                ListOfTasks().Add(1, task);
+                TasksDictionary().Add(1, task);
             }
         }
 
-        public Dictionary<int, string> ListOfTasks()
+        public Dictionary<int, string> TasksDictionary()
         {
             return taskDictionary;
+        }
+
+        private string formattedTask(int taskNumber, string taskDescription)
+        {
+            return $"{taskNumber} - {taskDescription}";
         }
 
         public void DisplayTasksOnConsole()
@@ -32,30 +38,51 @@ namespace ToDoApp
             }
         }
 
+        //public void AddMenuOptions()
+        //{
+        //    MenuDictionary().Add(1, "Create a Task");
+        //    MenuDictionary().Add(2, "2Exit the App");
+        //    MenuDictionary().Add(3, "1Exit the App");
+        //}
+
+        //public Dictionary<int, string> MenuDictionary()
+        //{
+        //    return menuDictionary;
+        //}
+
+        //public void DisplayMenuOptionsOnConsole()
+        //{
+        //    foreach (var (menuNumber, menuOption) in menuDictionary)
+        //    {
+        //        Console.WriteLine($"{menuNumber} - {menuOption}");
+        //    }
+        //}
+
+
         public void ToDoAppLoop()
         {
             bool status = true;
             string userInput = "";
 
             Console.WriteLine("Welcome To The To-Do App");
+            //DisplayMenuOptionsOnConsole();
 
-            do
+            while(status == true)
             {
-                if (userInput.ToLower() == "exit")
+                Console.Write("Create a task >> ");
+                userInput = Console.ReadLine().ToString();
+                if(userInput.ToLower() == "exit")
                 {
                     status = false;
                 }
                 else
                 {
-                    Console.Write("Create a task >> ");
-                    userInput = Console.ReadLine().ToString();
                     CreateTask(userInput);
                     Console.Clear();
                     Console.WriteLine("Your tasks");
                     DisplayTasksOnConsole();
                 }
-
-            } while (status);
+            }
 
         }
     }
