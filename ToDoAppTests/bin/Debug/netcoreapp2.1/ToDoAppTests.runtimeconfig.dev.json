@@ -3,7 +3,7 @@
     "additionalProbingPaths": [
       "C:\\Users\\miana\\.dotnet\\store\\|arch|\\|tfm|",
       "C:\\Users\\miana\\.nuget\\packages",
-      "C:\\Program Files (x86)\\dotnet\\sdk\\NuGetFallbackFolder"
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
     ]
   }
 }

@@ -39,21 +39,15 @@ namespace ToDoAppTests
             Assert.AreEqual(task, todo.TasksDictionary()[3]);
         }
 
-        //[Test]
-        //public void CreateMenuOptions()
-        //{
-        //    todo.AddMenuOptions();
-        //    Assert.AreEqual("Create a Task", todo.MenuDictionary()[1]);
-        //    Assert.AreEqual("Exit the App", todo.MenuDictionary()[2]);
-        //} 
+        [Test]
+        public void CreateOneMenuOption()
+        {
+            todo.CreateMenuOptions();
+            Assert.AreEqual("Create a Task", todo.MenuDictionary()[1]);
+            Assert.AreEqual("Exit the App", todo.MenuDictionary()[2]);
+        }
 
-        //[Test]
-        //public void DisplayTasksOnConsole()
-        //{
-        //    CreateMultipleTasks(1, task);
-        //    var output = todo.DisplayTasksOnConsole();
-        //    Assert.AreEqual("1 - This is a task", );
-        //}
+
 
 
 

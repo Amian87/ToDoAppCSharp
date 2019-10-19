@@ -25,10 +25,10 @@ namespace ToDoApp
             return taskDictionary;
         }
 
-        private string formattedTask(int taskNumber, string taskDescription)
-        {
-            return $"{taskNumber} - {taskDescription}";
-        }
+        //private string formattedTask(int taskNumber, string taskDescription)
+        //{
+        //    return $"{taskNumber} - {taskDescription}";
+        //}
 
         public void DisplayTasksOnConsole()
         {
@@ -38,26 +38,25 @@ namespace ToDoApp
             }
         }
 
-        //public void AddMenuOptions()
-        //{
-        //    MenuDictionary().Add(1, "Create a Task");
-        //    MenuDictionary().Add(2, "2Exit the App");
-        //    MenuDictionary().Add(3, "1Exit the App");
-        //}
+        public void CreateMenuOptions()
+        {
+            MenuDictionary().Add(1, "Create a Task");
+            MenuDictionary().Add(2, "Exit the App");
+        }
 
-        //public Dictionary<int, string> MenuDictionary()
-        //{
-        //    return menuDictionary;
-        //}
+        public Dictionary<int, string> MenuDictionary()
+        {    
+            return menuDictionary;
+        }
 
-        //public void DisplayMenuOptionsOnConsole()
-        //{
-        //    foreach (var (menuNumber, menuOption) in menuDictionary)
-        //    {
-        //        Console.WriteLine($"{menuNumber} - {menuOption}");
-        //    }
-        //}
-
+        public void DisplayMenuOptionsOnConsole()
+        {
+            CreateMenuOptions();
+            foreach (var (menuNumber, menuOption) in menuDictionary)
+            {
+                Console.WriteLine($"{menuNumber} - {menuOption}");
+            }
+        }
 
         public void ToDoAppLoop()
         {
@@ -65,7 +64,7 @@ namespace ToDoApp
             string userInput = "";
 
             Console.WriteLine("Welcome To The To-Do App");
-            //DisplayMenuOptionsOnConsole();
+            DisplayMenuOptionsOnConsole();
 
             while(status == true)
             {
