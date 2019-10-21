@@ -40,9 +40,8 @@ namespace ToDoAppTests
         }
 
         [Test]
-        public void CreateOneMenuOption()
+        public void CreateMenuOption()
         {
-            //todo.MenuDictionary();
             Assert.AreEqual("Create a Task", todo.MenuDictionary()[1]);
             Assert.AreEqual("Exit the App", todo.MenuDictionary()[2]);
         }
@@ -64,7 +63,7 @@ namespace ToDoAppTests
         }
 
         [Test]
-        public void CannotMarkATaskAsCompleteMultipleTimes()
+        public void CannotMarkTaskAsCompleteMultipleTimes()
         {
             todo.CreateTask("This is a complete task");
             todo.MarkTaskComplete(1);

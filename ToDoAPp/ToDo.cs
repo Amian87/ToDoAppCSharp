@@ -6,7 +6,7 @@ namespace ToDoApp
     public class ToDo
     {
         private readonly Dictionary<int, string> taskDictionary = new Dictionary<int, string>();
-        private readonly List<int> taskNumbersComplate = new List<int>();
+        private readonly List<int> taskNumbersComplete = new List<int>();
         private readonly Dictionary<int, string> menuDictionary = new Dictionary<int, string>()
         {
             [1] = "Create a Task",
@@ -63,11 +63,11 @@ namespace ToDoApp
         {
             string appendToCompleteTask = "  X  " + "Completed on " + DateTime.Now.ToString("MM-dd-yyyy");
 
-            if (taskDictionary.ContainsKey(taskNumber) && !taskNumbersComplate.Contains(taskNumber))
+            if (taskDictionary.ContainsKey(taskNumber) && !taskNumbersComplete.Contains(taskNumber))
             {
                 string task = taskDictionary[taskNumber];
                 taskDictionary[taskNumber] = string.Concat(task, appendToCompleteTask);
-                taskNumbersComplate.Add(taskNumber);
+                taskNumbersComplete.Add(taskNumber);
             }
 
         }
@@ -85,7 +85,7 @@ namespace ToDoApp
                 CondtionallyDisplayCompleteOption();
                 Console.WriteLine("To-Do App Menu");
                 DisplayMenuOptionsOnConsole();
-                Console.Write("Select option number from the menu >>  ");
+                Console.Write("Select option number from the menu >> ");
                 string userInput = Console.ReadLine().ToString();
 
                 if (userInput == "1")
@@ -94,7 +94,7 @@ namespace ToDoApp
                     userInput = Console.ReadLine().ToString();
                     CreateTask(userInput);
                     Console.Clear();
-                    DisplayTasksOnCosole();
+                    WriteTasksOnConsole();
 
                 }
                 else if (userInput == "2")
@@ -105,10 +105,10 @@ namespace ToDoApp
                 {
                     Console.WriteLine("Which task number would you like to update?");
                     userTaskNumberInput = Int32.Parse(Console.ReadLine());
-                    Console.Write("Update task number " + userTaskNumberInput + " >>");
+                    Console.Write("Update task number " + userTaskNumberInput + " >> ");
                     userInput = Console.ReadLine();
                     UpdateTask(userTaskNumberInput, userInput);
-                    DisplayTasksOnCosole();
+                    WriteTasksOnConsole();
                 }
                 else if (userInput == "4" && TasksDictionary().Count != 0)
                 {
@@ -117,14 +117,14 @@ namespace ToDoApp
                     {
                         MarkTaskComplete(userTaskNumberInput);
                     }
-                    DisplayTasksOnCosole();
+                    WriteTasksOnConsole();
 
                 }
             }
 
         }
 
-        private void DisplayTasksOnCosole()
+        private void WriteTasksOnConsole()
         {
             Console.WriteLine("Your tasks");
             DisplayTasksOnConsole();
@@ -134,7 +134,7 @@ namespace ToDoApp
         {
             if (TasksDictionary().Count != 0)
             {
-                menuDictionary.Remove(3);
+                MenuDictionary().Remove(3);
                 MenuDictionary().Add(3, "Update a Task");
             }
         }
@@ -143,7 +143,7 @@ namespace ToDoApp
         {
             if (TasksDictionary().Count != 0)
             {
-                menuDictionary.Remove(4);
+                MenuDictionary().Remove(4);
                 MenuDictionary().Add(4, "Mark Task as Complete");
             }
         }
