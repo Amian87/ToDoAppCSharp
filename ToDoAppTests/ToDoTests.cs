@@ -7,7 +7,6 @@ namespace ToDoAppTests
     public class ToDoTests
     {
         private ToDo todo;
-        private string task = "This is a task";
 
         [SetUp]
         public void SetUP()
@@ -18,9 +17,12 @@ namespace ToDoAppTests
         [Test]
         public void CreateThreeTasks()
         {
-            todo.CreateTask("This is a task");
-            todo.CreateTask("This is a task");
-            todo.CreateTask("This is a task");
+            string task = "This is a task";
+
+            todo.CreateTask(task);
+            todo.CreateTask(task);
+            todo.CreateTask(task);
+            
             Assert.AreEqual(task, todo.TasksDictionary()[1]);
             Assert.AreEqual(task, todo.TasksDictionary()[2]);
             Assert.AreEqual(task, todo.TasksDictionary()[3]);
