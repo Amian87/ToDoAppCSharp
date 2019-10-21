@@ -1,4 +1,5 @@
 ﻿using System;
+using ToDoApp;
 
 namespace ToDoAppConsole
 {
@@ -6,7 +7,11 @@ namespace ToDoAppConsole
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome To To-Do App");
+            ToDo todo = new ToDo();
+            //todo.MenuDictionary().Add(3, "Exit the App");
+            todo.ToDoAppLoop();
+  
+      
         }
     }
 }

@@ -1,5 +1,4 @@
 C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppTests\bin\Debug\netcoreapp2.1\ToDoApp.dll
-C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppTests\obj\Debug\netcoreapp2.1\ToDoAppTests.csproj.CoreCompileInputs.cache
 C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppTests\obj\Debug\netcoreapp2.1\ToDoAppTests.AssemblyInfoInputs.cache
 C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppTests\obj\Debug\netcoreapp2.1\ToDoAppTests.AssemblyInfo.cs
 C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppTests\obj\Debug\netcoreapp2.1\ToDoAppTests.csprojAssemblyReference.cache
