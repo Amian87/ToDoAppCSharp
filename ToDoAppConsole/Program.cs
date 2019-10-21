@@ -8,7 +8,6 @@ namespace ToDoAppConsole
         static void Main(string[] args)
         {
             ToDo todo = new ToDo();
-            //todo.MenuDictionary().Add(3, "Exit the App");
             todo.ToDoAppLoop();
   
       

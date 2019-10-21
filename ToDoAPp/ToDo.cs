@@ -80,9 +80,10 @@ namespace ToDoApp
             Console.WriteLine("Welcome To The To-Do App");
                
             while (status == true)
-            {                
-                CondtionallyDisplayUpdateOption();
-                CondtionallyDisplayCompleteOption();
+            {
+                Console.Clear();
+                WriteTasksOnConsole();
+                CondtionallyDisplayUpdateAndCompleteMenuOptions();
                 Console.WriteLine("To-Do App Menu");
                 DisplayMenuOptionsOnConsole();
                 Console.Write("Select option number from the menu >> ");
@@ -104,10 +105,12 @@ namespace ToDoApp
                 else if (userInput == "3" && TasksDictionary().Count != 0)
                 {
                     Console.WriteLine("Which task number would you like to update?");
-                    userTaskNumberInput = Int32.Parse(Console.ReadLine());
-                    Console.Write("Update task number " + userTaskNumberInput + " >> ");
-                    userInput = Console.ReadLine();
-                    UpdateTask(userTaskNumberInput, userInput);
+                    if(Int32.TryParse(Console.ReadLine(), out userTaskNumberInput))
+                    {
+                        Console.Write("Update task number " + userTaskNumberInput + " >> ");
+                        userInput = Console.ReadLine();
+                        UpdateTask(userTaskNumberInput, userInput);
+                    }
                     WriteTasksOnConsole();
                 }
                 else if (userInput == "4" && TasksDictionary().Count != 0)
@@ -130,19 +133,12 @@ namespace ToDoApp
             DisplayTasksOnConsole();
         }
 
-        private void CondtionallyDisplayUpdateOption()
+        private void CondtionallyDisplayUpdateAndCompleteMenuOptions()
         {
             if (TasksDictionary().Count != 0)
             {
                 MenuDictionary().Remove(3);
                 MenuDictionary().Add(3, "Update a Task");
-            }
-        }
-
-        private void CondtionallyDisplayCompleteOption()
-        {
-            if (TasksDictionary().Count != 0)
-            {
                 MenuDictionary().Remove(4);
                 MenuDictionary().Add(4, "Mark Task as Complete");
             }
