@@ -42,16 +42,35 @@ namespace ToDoAppTests
         [Test]
         public void CreateOneMenuOption()
         {
-            todo.CreateMenuOptions();
+            //todo.MenuDictionary();
             Assert.AreEqual("Create a Task", todo.MenuDictionary()[1]);
             Assert.AreEqual("Exit the App", todo.MenuDictionary()[2]);
         }
 
+        [Test]
+        public void UpdateOneTask()
+        {
+            todo.CreateTask("This is a task");
+            todo.UpdateTask(1, "This is the updated task");
+            Assert.AreEqual("This is the updated task", todo.TasksDictionary()[1]);
+        }
 
+        [Test]
+        public void MarkTaskAsComplete()
+        {
+            todo.CreateTask("This is a complete task");
+            todo.MarkTaskComplete(1);
+            Assert.AreEqual("This is a complete task  X  Completed on " + DateTime.Now.ToString("MM-dd-yyyy"), todo.TasksDictionary()[1]);
+        }
 
-
-
-
+        [Test]
+        public void CannotMarkATaskAsCompleteMultipleTimes()
+        {
+            todo.CreateTask("This is a complete task");
+            todo.MarkTaskComplete(1);
+            todo.MarkTaskComplete(1);
+            Assert.AreEqual("This is a complete task  X  Completed on " + DateTime.Now.ToString("MM-dd-yyyy"), todo.TasksDictionary()[1]);
+        }
 
     }
 }
