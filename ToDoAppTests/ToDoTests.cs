@@ -15,25 +15,12 @@ namespace ToDoAppTests
             todo = new ToDo();
         }
 
-        public void CreateMultipleTasks(int numberOfTasks, string task)
-        {
-            for(int i = 0; i < numberOfTasks; i++)
-            {
-                todo.CreateTask(task);
-            }
-        }
-
-        [Test]
-        public void CreateOneTask()
-        {
-            CreateMultipleTasks(1, task);
-            Assert.AreEqual(task, todo.TasksDictionary()[1]);
-        }
-
         [Test]
         public void CreateThreeTasks()
         {
-            CreateMultipleTasks(3, task);
+            todo.CreateTask("This is a task");
+            todo.CreateTask("This is a task");
+            todo.CreateTask("This is a task");
             Assert.AreEqual(task, todo.TasksDictionary()[1]);
             Assert.AreEqual(task, todo.TasksDictionary()[2]);
             Assert.AreEqual(task, todo.TasksDictionary()[3]);
