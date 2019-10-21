@@ -81,7 +81,6 @@ namespace ToDoApp
                
             while (status == true)
             {
-                Console.Clear();
                 WriteTasksOnConsole();
                 CondtionallyDisplayUpdateAndCompleteMenuOptions();
                 Console.WriteLine("To-Do App Menu");
@@ -94,9 +93,6 @@ namespace ToDoApp
                     Console.Write("Create a task >> ");
                     userInput = Console.ReadLine().ToString();
                     CreateTask(userInput);
-                    Console.Clear();
-                    WriteTasksOnConsole();
-
                 }
                 else if (userInput == "2")
                 {
@@ -111,7 +107,6 @@ namespace ToDoApp
                         userInput = Console.ReadLine();
                         UpdateTask(userTaskNumberInput, userInput);
                     }
-                    WriteTasksOnConsole();
                 }
                 else if (userInput == "4" && TasksDictionary().Count != 0)
                 {
@@ -120,8 +115,6 @@ namespace ToDoApp
                     {
                         MarkTaskComplete(userTaskNumberInput);
                     }
-                    WriteTasksOnConsole();
-
                 }
             }
 
@@ -129,8 +122,12 @@ namespace ToDoApp
 
         private void WriteTasksOnConsole()
         {
-            Console.WriteLine("Your tasks");
-            DisplayTasksOnConsole();
+            if (TasksDictionary().Count != 0)
+            {
+                Console.Clear();
+                Console.WriteLine("Your tasks");
+                DisplayTasksOnConsole();
+            }
         }
 
         private void CondtionallyDisplayUpdateAndCompleteMenuOptions()
