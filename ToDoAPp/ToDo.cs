@@ -1,8 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using static ToDoApp.ToDoClasses;
+using System.Data.Entity;
 
 namespace ToDoApp
 {
+    public class ToDoContext : DbContext
+    {
+        public DbSet<List> Lists { get; set; }
+        public DbSet<Task> Tasks { get; set; }
+    }
+
     public class ToDo
     {
         private readonly Dictionary<int, string> taskDictionary = new Dictionary<int, string>();
@@ -13,9 +21,21 @@ namespace ToDoApp
             [2] = "Exit the App"
         };
 
-        public void CreateTask(string task)
+
+
+
+public void CreateTask(string task)
         {
-            if(taskDictionary.ContainsKey(taskDictionary.Count))
+            using (var db = new ToDoContext())
+            {
+                var td = new List() { ListName = "Life" };
+                db.Lists.Add(td);
+                db.SaveChanges();
+
+            }
+
+
+            if (taskDictionary.ContainsKey(taskDictionary.Count))
             {
                 TasksDictionary().Add(taskDictionary.Count + 1, task);
             }

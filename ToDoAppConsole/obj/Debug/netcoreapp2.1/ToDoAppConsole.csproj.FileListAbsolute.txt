@@ -11,3 +11,4 @@ C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppConsole\obj\Debug\
 C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppConsole\obj\Debug\netcoreapp2.1\ToDoAppConsole.csproj.CopyComplete
 C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppConsole\obj\Debug\netcoreapp2.1\ToDoAppConsole.dll
 C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppConsole\obj\Debug\netcoreapp2.1\ToDoAppConsole.pdb
+C:\Users\miana\Documents\weirich_project\ToDoAppCSharp\ToDoAppConsole\bin\Debug\netcoreapp2.1\ToDoAppConsole.dll.config

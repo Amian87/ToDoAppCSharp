@@ -1,16 +1,22 @@
 ﻿using System;
+using System.Data.Entity;
 using ToDoApp;
+using static ToDoApp.ToDoClasses;
 
 namespace ToDoAppConsole
 {
+
     class Program
     {
-        static void Main(string[] args)
+        static void Main( )
         {
-            ToDo todo = new ToDo();
+            ToDo todo = new ToDo();  
             todo.ToDoAppLoop();
-  
-      
         }
+
+    
+
     }
+
+
 }

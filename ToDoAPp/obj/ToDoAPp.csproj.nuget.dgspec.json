@@ -21,14 +21,14 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp2.1"
+          "netcoreapp3.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp2.1": {
+          "netcoreapp3.0": {
             "projectReferences": {}
           }
         },
@@ -39,13 +39,11 @@
         }
       },
       "frameworks": {
-        "netcoreapp2.1": {
+        "netcoreapp3.0": {
           "dependencies": {
-            "Microsoft.NETCore.App": {
-              "suppressParent": "All",
+            "EntityFramework": {
               "target": "Package",
-              "version": "[2.1.0, )",
-              "autoReferenced": true
+              "version": "[6.3.0, )"
             }
           },
           "imports": [
@@ -58,6 +56,11 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
