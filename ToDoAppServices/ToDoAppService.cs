@@ -18,6 +18,7 @@ namespace ToDoAppServices
 
         public List CreateList(string listName)
         {
+            _context.Database.Log = Console.WriteLine;
             var list = _context.Lists.Add(new List { ListName = listName });
             _context.SaveChanges();
 
@@ -26,22 +27,25 @@ namespace ToDoAppServices
 
         public Task CreateTask(string taskDescription, bool taskStatus, DateTime completionDate)
         {
+            _context.Database.Log = Console.WriteLine;
             var task = _context.Tasks.Add(new Task { TaskDescription = taskDescription, TaskStatus = taskStatus, CompletionDate = completionDate });
             _context.SaveChanges();
 
             return task;
         }
 
-        public List<string> GetAllTasksOutOfService()
-        {
-            var query = from t in _context.Tasks select t.TaskDescription;
-            return query.ToList();
-        }
-
         public List<TaskDTO> GetAllTasks()
         {
+            _context.Database.Log = Console.WriteLine;
             var query = _context.Tasks.Select(t => new TaskDTO { TaskDescription = t.TaskDescription, TaskID = t.TaskID, TaskStatus = t.TaskStatus, CompletionDate = t.CompletionDate, ListID = t.ListID });
             return query.ToList();   
+        }
+
+        public void UpdateTask(string taskDescription, int taskID, bool taskStatus )
+        {
+            var task = _context.Tasks.Where(t => t.TaskID == taskID).FirstOrDefault();
+            task.TaskDescription = taskDescription;
+            _context.SaveChanges();
         }
 
     }

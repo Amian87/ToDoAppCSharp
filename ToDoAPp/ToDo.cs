@@ -12,9 +12,6 @@ namespace ToDoApp
         private ToDoAppService tds = new ToDoAppService(context);
 
 
-
-
-
         private readonly Dictionary<int, string> taskDictionary = new Dictionary<int, string>();
         private readonly List<int> taskNumbersComplete = new List<int>();
         private readonly Dictionary<int, string> menuDictionary = new Dictionary<int, string>()
@@ -56,12 +53,16 @@ namespace ToDoApp
             }
         }
 
-        public void UpdateTask(int taskNumber, string updatedTask)
+        public void UpdateTask(int taskNumber, string taskDescription, List<TaskDTO> allTasks)
         {
-            if(taskDictionary.ContainsKey(taskNumber))
-            {
-                taskDictionary[taskNumber] = updatedTask;
-            }
+            int taskID = allTasks[taskNumber - 1].TaskID;
+
+            //if(taskDictionary.ContainsKey(taskNumber))
+            //{
+            //    string updatedTaskDB = allTasks[taskNumber - 1].TaskDescription = updatedTask;
+            //}
+
+            tds.UpdateTask(taskDescription, taskID, false);
         }
 
         public void MarkTaskComplete(int taskNumber)
@@ -105,17 +106,17 @@ namespace ToDoApp
                 {
                     status = false;
                 }
-                else if (userInput == "3" && TasksDictionary().Count != 0)
+                else if (userInput == "3" && allTasks.Count != 0)
                 {
                     Console.WriteLine("Which task number would you like to update?");
                     if(Int32.TryParse(Console.ReadLine(), out userTaskNumberInput))
                     {
                         Console.Write("Update task number " + userTaskNumberInput + " >> ");
                         userInput = Console.ReadLine();
-                        UpdateTask(userTaskNumberInput, userInput);
+                        UpdateTask(userTaskNumberInput, userInput, allTasks);
                     }
                 }
-                else if (userInput == "4" && TasksDictionary().Count != 0)
+                else if (userInput == "4" && allTasks.Count != 0)
                 {
                     Console.WriteLine("Which task number would you like to mark as complete?");
                     if(Int32.TryParse(Console.ReadLine(), out userTaskNumberInput))
