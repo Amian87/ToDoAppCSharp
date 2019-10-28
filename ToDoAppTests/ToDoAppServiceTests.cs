@@ -12,8 +12,6 @@ namespace ToDoAppTests
 {
     class ToDoAppServiceTests
     {
-        private ToDoAppService tds;
-
         [Test]
         public void SaveListToDatabase()
         {
@@ -45,6 +43,12 @@ namespace ToDoAppTests
             mockContext.Verify(m => m.SaveChanges(), Times.Once());
 
         }
+
+        //[Tests]
+        //public void GetTaskFromDatabase()
+        //{
+        //    var mockSet = new Mock<DbSet<Task>>();
+        //}
 
     }
 }

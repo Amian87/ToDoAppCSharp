@@ -23,7 +23,7 @@
                         TaskID = c.Int(nullable: false, identity: true),
                         ListID = c.Int(nullable: false),
                         TaskDescription = c.String(),
-                        CompletionDate = c.DateTime(nullable: false),
+                        CompletionDate = c.DateTime(nullable: true),
                         TaskStatus = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.TaskID);

@@ -1067,7 +1067,7 @@
     ".NETCoreApp,Version=v3.0": [
       "EntityFramework >= 6.3.0",
       "ToDoApp >= 1.0.0",
-      "ToDoAppDomain.Classes >= 1.0.0"
+      "ToDoAppServices >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1100,8 +1100,8 @@
       "frameworks": {
         "netcoreapp3.0": {
           "projectReferences": {
-            "C:\\Users\\miana\\Documents\\weirich_project\\ToDoAppCSharp\\ToDoAppDomain.Classes\\ToDoAppDomain.Classes.csproj": {
-              "projectPath": "C:\\Users\\miana\\Documents\\weirich_project\\ToDoAppCSharp\\ToDoAppDomain.Classes\\ToDoAppDomain.Classes.csproj"
+            "C:\\Users\\miana\\Documents\\weirich_project\\ToDoAppCSharp\\ToDoAppServices\\ToDoAppServices.csproj": {
+              "projectPath": "C:\\Users\\miana\\Documents\\weirich_project\\ToDoAppCSharp\\ToDoAppServices\\ToDoAppServices.csproj"
             },
             "C:\\Users\\miana\\Documents\\weirich_project\\ToDoAppCSharp\\ToDoAPp\\ToDoApp.csproj": {
               "projectPath": "C:\\Users\\miana\\Documents\\weirich_project\\ToDoAppCSharp\\ToDoAPp\\ToDoApp.csproj"

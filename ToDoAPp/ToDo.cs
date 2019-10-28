@@ -1,10 +1,20 @@
 ﻿using System;
+using ToDoAppServices;
 using System.Collections.Generic;
+using ToDoAppDomain.Classes;
+using static ToDoAppDomain.Classes.DomainClasses;
 
 namespace ToDoApp
 {
     public class ToDo
     {
+        private static ToDoContext context = new ToDoContext();
+        private ToDoAppService tds = new ToDoAppService(context);
+
+
+
+
+
         private readonly Dictionary<int, string> taskDictionary = new Dictionary<int, string>();
         private readonly List<int> taskNumbersComplete = new List<int>();
         private readonly Dictionary<int, string> menuDictionary = new Dictionary<int, string>()
@@ -13,28 +23,23 @@ namespace ToDoApp
             [2] = "Exit the App"
         };
 
-        public void CreateTask(string task)
-        {
-            if(taskDictionary.ContainsKey(taskDictionary.Count))
-            {
-                TasksDictionary().Add(taskDictionary.Count + 1, task);
-            }
-            else
-            {
-                TasksDictionary().Add(1, task);
-            }
-        }
-
         public Dictionary<int, string> TasksDictionary()
         {
             return taskDictionary;
         }
 
-        public void DisplayTasksOnConsole()
+        public List<string> GetAllTasksFromDB()
         {
-            foreach(var(taskNumber, task) in taskDictionary)
+            var tasks = tds.GetAllTasks();
+            return tasks;
+        }
+
+
+        public void DisplayTasksOnConsole(List<string> tasks)
+        {
+            for(int i = 1; i < tasks.Count; i++)
             {
-                Console.WriteLine($"{taskNumber} - {task}");
+                Console.WriteLine($"{i} - {tasks[i]}");
             }
         }
 
@@ -76,13 +81,15 @@ namespace ToDoApp
         {
             bool status = true;
             int userTaskNumberInput;
+         
 
             Console.WriteLine("Welcome To The To-Do App");
                
             while (status == true)
             {
-                WriteTasksOnConsole();
-                CondtionallyDisplayUpdateAndCompleteMenuOptions();
+                List<string> allTasks = GetAllTasksFromDB();
+                WriteTasksOnConsole(allTasks);
+                CondtionallyDisplayUpdateAndCompleteMenuOptions(allTasks);
                 Console.WriteLine("To-Do App Menu");
                 DisplayMenuOptionsOnConsole();
                 Console.Write("Select option number from the menu >> ");
@@ -92,7 +99,7 @@ namespace ToDoApp
                 {
                     Console.Write("Create a task >> ");
                     userInput = Console.ReadLine().ToString();
-                    CreateTask(userInput);
+                    tds.CreateTask(userInput, false, DateTime.Today);
                 }
                 else if (userInput == "2")
                 {
@@ -120,19 +127,19 @@ namespace ToDoApp
 
         }
 
-        private void WriteTasksOnConsole()
+        private void WriteTasksOnConsole(List<string> tasks)
         {
-            if (TasksDictionary().Count != 0)
+            if (tasks.Count != 0)
             {
                 Console.Clear();
                 Console.WriteLine("Your tasks");
-                DisplayTasksOnConsole();
+                DisplayTasksOnConsole(tasks);
             }
         }
 
-        private void CondtionallyDisplayUpdateAndCompleteMenuOptions()
+        private void CondtionallyDisplayUpdateAndCompleteMenuOptions(List<string> tasks)
         {
-            if (TasksDictionary().Count != 0)
+            if (tasks.Count != 0)
             {
                 MenuDictionary().Remove(3);
                 MenuDictionary().Add(3, "Update a Task");
