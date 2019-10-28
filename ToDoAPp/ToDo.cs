@@ -28,18 +28,18 @@ namespace ToDoApp
             return taskDictionary;
         }
 
-        public List<string> GetAllTasksFromDB()
+        public List<TaskDTO> GetAllTasksFromDB()
         {
             var tasks = tds.GetAllTasks();
             return tasks;
         }
 
 
-        public void DisplayTasksOnConsole(List<string> tasks)
+        public void DisplayTasksOnConsole(List<TaskDTO> tasks)
         {
-            for(int i = 1; i < tasks.Count; i++)
+            for(int i = 0; i < tasks.Count; i++)
             {
-                Console.WriteLine($"{i} - {tasks[i]}");
+                Console.WriteLine($"{i + 1} - {tasks[i].TaskDescription}");
             }
         }
 
@@ -87,7 +87,7 @@ namespace ToDoApp
                
             while (status == true)
             {
-                List<string> allTasks = GetAllTasksFromDB();
+                List<TaskDTO> allTasks = GetAllTasksFromDB();
                 WriteTasksOnConsole(allTasks);
                 CondtionallyDisplayUpdateAndCompleteMenuOptions(allTasks);
                 Console.WriteLine("To-Do App Menu");
@@ -127,7 +127,7 @@ namespace ToDoApp
 
         }
 
-        private void WriteTasksOnConsole(List<string> tasks)
+        private void WriteTasksOnConsole(List<TaskDTO> tasks)
         {
             if (tasks.Count != 0)
             {
@@ -137,7 +137,7 @@ namespace ToDoApp
             }
         }
 
-        private void CondtionallyDisplayUpdateAndCompleteMenuOptions(List<string> tasks)
+        private void CondtionallyDisplayUpdateAndCompleteMenuOptions(List<TaskDTO> tasks)
         {
             if (tasks.Count != 0)
             {

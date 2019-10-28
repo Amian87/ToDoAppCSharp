@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using static ToDoAppDomain.Classes.DomainClasses;
 using System.Linq;
+using ToDoAppDomain.Classes;
 
 namespace ToDoAppServices
 {
@@ -31,10 +32,16 @@ namespace ToDoAppServices
             return task;
         }
 
-        public List<string> GetAllTasks()
+        public List<string> GetAllTasksOutOfService()
         {
             var query = from t in _context.Tasks select t.TaskDescription;
             return query.ToList();
+        }
+
+        public List<TaskDTO> GetAllTasks()
+        {
+            var query = _context.Tasks.Select(t => new TaskDTO { TaskDescription = t.TaskDescription, TaskID = t.TaskID, TaskStatus = t.TaskStatus, CompletionDate = t.CompletionDate, ListID = t.ListID });
+            return query.ToList();   
         }
 
     }
