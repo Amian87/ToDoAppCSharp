@@ -8,7 +8,7 @@ namespace ToDoAppServices
 {
     public class ToDoAppService
     {
-        private ToDoContext _context;
+        private readonly ToDoContext _context;
 
 
         public ToDoAppService(ToDoContext context)
@@ -18,30 +18,34 @@ namespace ToDoAppServices
 
         public List CreateList(string listName)
         {
-            _context.Database.Log = Console.WriteLine;
             var list = _context.Lists.Add(new List { ListName = listName });
             _context.SaveChanges();
 
             return list;
         }
 
-        public Task CreateTask(string taskDescription, bool taskStatus, DateTime completionDate)
+        public Task CreateTask(string taskDescription)
         {
-            _context.Database.Log = Console.WriteLine;
-            var task = _context.Tasks.Add(new Task { TaskDescription = taskDescription, TaskStatus = taskStatus, CompletionDate = completionDate });
+            var task = _context.Tasks.Add(new Task { TaskDescription = taskDescription, TaskStatus = false});
             _context.SaveChanges();
-
             return task;
+        }
+
+        public void CompleteTask(int taskID)
+        {
+            var task = _context.Tasks.Where(t => t.TaskID == taskID).FirstOrDefault();
+            task.CompletionDate = DateTime.Now.ToString("MM-dd-yyyy");
+            task.TaskStatus = true;
+            _context.SaveChanges();
         }
 
         public List<TaskDTO> GetAllTasks()
         {
-            _context.Database.Log = Console.WriteLine;
             var query = _context.Tasks.Select(t => new TaskDTO { TaskDescription = t.TaskDescription, TaskID = t.TaskID, TaskStatus = t.TaskStatus, CompletionDate = t.CompletionDate, ListID = t.ListID });
             return query.ToList();   
         }
 
-        public void UpdateTask(string taskDescription, int taskID, bool taskStatus )
+        public void UpdateTask(string taskDescription, int taskID)
         {
             var task = _context.Tasks.Where(t => t.TaskID == taskID).FirstOrDefault();
             task.TaskDescription = taskDescription;

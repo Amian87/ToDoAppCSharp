@@ -37,7 +37,7 @@ namespace ToDoAppTests
             mockContext.Setup(m => m.Tasks).Returns(mockSet.Object);
 
             var service = new ToDoAppService(mockContext.Object);
-            service.CreateTask("Visit Delaware", false, DateTime.Today);
+            service.CreateTask("Visit Delaware");
 
             mockSet.Verify(m => m.Add(It.IsAny<Task>()), Times.Once());
             mockContext.Verify(m => m.SaveChanges(), Times.Once());

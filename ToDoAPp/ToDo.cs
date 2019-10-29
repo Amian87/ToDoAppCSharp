@@ -8,22 +8,14 @@ namespace ToDoApp
 {
     public class ToDo
     {
-        private static ToDoContext context = new ToDoContext();
-        private ToDoAppService tds = new ToDoAppService(context);
-
-
-        private readonly Dictionary<int, string> taskDictionary = new Dictionary<int, string>();
-        private readonly List<int> taskNumbersComplete = new List<int>();
+        private readonly static ToDoContext context = new ToDoContext();
+        private readonly ToDoAppService tds = new ToDoAppService(context);
+        public List<TaskDTO> listOfTasks;
         private readonly Dictionary<int, string> menuDictionary = new Dictionary<int, string>()
         {
             [1] = "Create a Task",
             [2] = "Exit the App"
         };
-
-        public Dictionary<int, string> TasksDictionary()
-        {
-            return taskDictionary;
-        }
 
         public List<TaskDTO> GetAllTasksFromDB()
         {
@@ -34,9 +26,21 @@ namespace ToDoApp
 
         public void DisplayTasksOnConsole(List<TaskDTO> tasks)
         {
+            int taskNumber = 0;
+
             for(int i = 0; i < tasks.Count; i++)
             {
-                Console.WriteLine($"{i + 1} - {tasks[i].TaskDescription}");
+                if(tasks[i].TaskStatus == true)
+                {
+                    Console.WriteLine($"{taskNumber + 1} - {tasks[i].TaskDescription} X Completed On {tasks[i].CompletionDate}");
+                    taskNumber += 1;
+                }
+
+                if (tasks[i].TaskStatus == false)
+                {
+                    Console.WriteLine($"{taskNumber + 1} - {tasks[i].TaskDescription}");
+                    taskNumber += 1;
+                }
             }
         }
 
@@ -53,30 +57,12 @@ namespace ToDoApp
             }
         }
 
-        public void UpdateTask(int taskNumber, string taskDescription, List<TaskDTO> allTasks)
+        public void UpdateTask(int taskNumber, string taskDescription, List<TaskDTO> listOfTasks)
         {
-            int taskID = allTasks[taskNumber - 1].TaskID;
-
-            //if(taskDictionary.ContainsKey(taskNumber))
-            //{
-            //    string updatedTaskDB = allTasks[taskNumber - 1].TaskDescription = updatedTask;
-            //}
-
-            tds.UpdateTask(taskDescription, taskID, false);
+            int taskID = listOfTasks[taskNumber - 1].TaskID;
+            tds.UpdateTask(taskDescription, taskID);
         }
 
-        public void MarkTaskComplete(int taskNumber)
-        {
-            string appendToCompleteTask = "  X  " + "Completed on " + DateTime.Now.ToString("MM-dd-yyyy");
-
-            if (taskDictionary.ContainsKey(taskNumber) && !taskNumbersComplete.Contains(taskNumber))
-            {
-                string task = taskDictionary[taskNumber];
-                taskDictionary[taskNumber] = string.Concat(task, appendToCompleteTask);
-                taskNumbersComplete.Add(taskNumber);
-            }
-
-        }
 
         public void ToDoAppLoop()
         {
@@ -88,9 +74,9 @@ namespace ToDoApp
                
             while (status == true)
             {
-                List<TaskDTO> allTasks = GetAllTasksFromDB();
-                WriteTasksOnConsole(allTasks);
-                CondtionallyDisplayUpdateAndCompleteMenuOptions(allTasks);
+                listOfTasks = GetAllTasksFromDB();
+                WriteTasksOnConsole(listOfTasks);
+                CondtionallyDisplayUpdateAndCompleteMenuOptions(listOfTasks);
                 Console.WriteLine("To-Do App Menu");
                 DisplayMenuOptionsOnConsole();
                 Console.Write("Select option number from the menu >> ");
@@ -100,47 +86,52 @@ namespace ToDoApp
                 {
                     Console.Write("Create a task >> ");
                     userInput = Console.ReadLine().ToString();
-                    tds.CreateTask(userInput, false, DateTime.Today);
+                    tds.CreateTask(userInput);
                 }
                 else if (userInput == "2")
                 {
                     status = false;
                 }
-                else if (userInput == "3" && allTasks.Count != 0)
+                else if (userInput == "3" && listOfTasks.Count != 0)
                 {
                     Console.WriteLine("Which task number would you like to update?");
-                    if(Int32.TryParse(Console.ReadLine(), out userTaskNumberInput))
+                    if(Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
                     {
                         Console.Write("Update task number " + userTaskNumberInput + " >> ");
                         userInput = Console.ReadLine();
-                        UpdateTask(userTaskNumberInput, userInput, allTasks);
+                        UpdateTask(userTaskNumberInput, userInput, listOfTasks);
                     }
                 }
-                else if (userInput == "4" && allTasks.Count != 0)
+                else if (userInput == "4" && listOfTasks.Count != 0)
                 {
                     Console.WriteLine("Which task number would you like to mark as complete?");
-                    if(Int32.TryParse(Console.ReadLine(), out userTaskNumberInput))
+                    if(Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
                     {
-                        MarkTaskComplete(userTaskNumberInput);
+                        if(listOfTasks[userTaskNumberInput -1].TaskStatus != true)
+                        {
+                            int taskID = listOfTasks[userTaskNumberInput - 1].TaskID;
+                            tds.CompleteTask(taskID);
+                        }
+
                     }
                 }
             }
 
         }
 
-        private void WriteTasksOnConsole(List<TaskDTO> tasks)
+        private void WriteTasksOnConsole(List<TaskDTO> listOfTasks)
         {
-            if (tasks.Count != 0)
+            if (listOfTasks.Count != 0)
             {
                 Console.Clear();
                 Console.WriteLine("Your tasks");
-                DisplayTasksOnConsole(tasks);
+                DisplayTasksOnConsole(listOfTasks);
             }
         }
 
-        private void CondtionallyDisplayUpdateAndCompleteMenuOptions(List<TaskDTO> tasks)
+        private void CondtionallyDisplayUpdateAndCompleteMenuOptions(List<TaskDTO> listOfTasks)
         {
-            if (tasks.Count != 0)
+            if (listOfTasks.Count != 0)
             {
                 MenuDictionary().Remove(3);
                 MenuDictionary().Add(3, "Update a Task");

@@ -21,6 +21,12 @@
     <EmbeddedResource Update="Migrations\201910281601028_completionDate nullable.resx">
       <DependentUpon>201910281601028_completionDate nullable.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Update="Migrations\201910291610590_added annotations to model.resx">
+      <DependentUpon>201910291610590_added annotations to model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Migrations\201910291755265_changed completionDate to string .resx">
+      <DependentUpon>201910291755265_changed completionDate to string .cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ namespace ToDoAppDomain.Classes
             public int ListID { get; set; }
             public int TaskID { get; set; }
             public string TaskDescription { get; set; }
-            public DateTime CompletionDate { get; set; }
+            public string CompletionDate { get; set; }
             public bool TaskStatus { get; set; }
     }
 }
