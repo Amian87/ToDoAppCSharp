@@ -10,16 +10,20 @@ namespace ToDoApp
     {
         private readonly static ToDoContext context = new ToDoContext();
         private readonly ToDoAppService tds = new ToDoAppService(context);
-        public List<TaskDTO> listOfTasks;
-        private readonly Dictionary<int, string> menuDictionary = new Dictionary<int, string>()
-        {
-            [1] = "Create a Task",
-            [2] = "Exit the App"
-        };
+        private List<TaskDTO> listOfTasks;
+        private List<ListDTO> availableLists = new List<ListDTO>();
+        private int listNumber;
+        private string userInput;
+        private int listID;
+        private string listName;
+   
+
+        private readonly Dictionary<int, string> menuDictionary = new Dictionary<int, string>();
 
         public List<TaskDTO> GetAllTasksFromDB()
         {
-            var tasks = tds.GetAllTasks();
+            
+            var tasks = tds.GetAllTasksInList(listID);
             return tasks;
         }
 
@@ -44,6 +48,14 @@ namespace ToDoApp
             }
         }
 
+        public void DisplayListsOnConsole(List<ListDTO> list)
+        {
+            for(int i = 0; i < list.Count; i++)
+            {
+                Console.WriteLine($"{i + 1} - {list[i].ListName}");
+            }
+        }
+
         public Dictionary<int, string> MenuDictionary()
         {
             return menuDictionary;
@@ -60,63 +72,126 @@ namespace ToDoApp
         public void UpdateTask(int taskNumber, string taskDescription, List<TaskDTO> listOfTasks)
         {
             int taskID = listOfTasks[taskNumber - 1].TaskID;
-            tds.UpdateTask(taskDescription, taskID);
+            tds.UpdateTask(taskDescription, taskID, listID);
         }
 
 
         public void ToDoAppLoop()
         {
-            bool status = true;
+            bool listMenu = true;
+            bool taskMenu = true;
             int userTaskNumberInput;
-         
 
             Console.WriteLine("Welcome To The To-Do App");
                
-            while (status == true)
+            while (listMenu == true)
             {
-                listOfTasks = GetAllTasksFromDB();
-                WriteTasksOnConsole(listOfTasks);
-                CondtionallyDisplayUpdateAndCompleteMenuOptions(listOfTasks);
+                availableLists = tds.GetAllLists();
+                
+                WriteListsOnConsole();
+                CondtionallyDisplayListMenuOptions();
                 Console.WriteLine("To-Do App Menu");
                 DisplayMenuOptionsOnConsole();
                 Console.Write("Select option number from the menu >> ");
-                string userInput = Console.ReadLine().ToString();
+                userInput = Console.ReadLine().ToString();
 
                 if (userInput == "1")
                 {
-                    Console.Write("Create a task >> ");
+                    Console.Write("Create a List >> ");
                     userInput = Console.ReadLine().ToString();
-                    tds.CreateTask(userInput);
+                    tds.CreateList(userInput);
                 }
-                else if (userInput == "2")
-                {
-                    status = false;
-                }
-                else if (userInput == "3" && listOfTasks.Count != 0)
-                {
-                    Console.WriteLine("Which task number would you like to update?");
-                    if(Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
-                    {
-                        Console.Write("Update task number " + userTaskNumberInput + " >> ");
-                        userInput = Console.ReadLine();
-                        UpdateTask(userTaskNumberInput, userInput, listOfTasks);
-                    }
-                }
-                else if (userInput == "4" && listOfTasks.Count != 0)
-                {
-                    Console.WriteLine("Which task number would you like to mark as complete?");
-                    if(Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
-                    {
-                        if(listOfTasks[userTaskNumberInput -1].TaskStatus != true)
-                        {
-                            int taskID = listOfTasks[userTaskNumberInput - 1].TaskID;
-                            tds.CompleteTask(taskID);
-                        }
 
-                    }
+                else if (userInput == "3")
+                {
+                    listMenu = false;
                 }
+
+                if (userInput == "2")
+                {
+                    Console.Write("Select the list number >> ");
+
+                    while (taskMenu)
+                    {
+          
+                        if (Int32.TryParse(Console.ReadLine(), out listNumber) && listNumber <= availableLists.Count)
+                        {
+                            listID = availableLists[listNumber - 1].ListID;
+                            listName = availableLists[listNumber - 1].ListName;
+                            displayTasksAfterOptionSelected();
+                        }
+                        else if (userInput == "4")
+                        {
+                            taskMenu = false;
+                        }
+                        if (userInput == "1")
+                        {
+                            Console.Write("Create a task >> ");
+                            userInput = Console.ReadLine().ToString();
+                            if (userInput != "")
+                            {
+                                tds.CreateTask(userInput, listID);
+                                 displayTasksAfterOptionSelected();
+                            }
+
+                        }
+                        else if (userInput == "2" && listOfTasks.Count != 0)
+                        {
+                            Console.WriteLine("Which task number would you like to update?");
+                            if (Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
+                            {
+                                Console.Write("Update task number " + userTaskNumberInput + " >> ");
+                                userInput = Console.ReadLine();
+                                UpdateTask(userTaskNumberInput, userInput, listOfTasks);
+                                displayTasksAfterOptionSelected();
+                            }
+                        }
+                        else if (userInput == "3" && listOfTasks.Count != 0)
+                        {
+                            Console.WriteLine("Which task number would you like to mark as complete?");
+                            if (Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
+                            {
+                                if (listOfTasks[userTaskNumberInput - 1].TaskStatus != true)
+                                {
+                                    int taskID = listOfTasks[userTaskNumberInput - 1].TaskID;
+                                    tds.CompleteTask(taskID);
+                                    displayTasksAfterOptionSelected();
+                                }
+
+                            }
+                        }
+                    }
+           
+                }
+    
             }
 
+        }
+
+        private void displayTasksAfterOptionSelected()
+        {
+            DisplayListOfTasksBasedOnSelectedList();
+            Console.WriteLine("To-Do App Menu");
+            CondtionallyDisplayUpdateAndCompleteMenuOptions(listOfTasks);
+            DisplayMenuOptionsOnConsole();
+            Console.Write("Select option number from the menu >> ");
+            userInput = Console.ReadLine().ToString();
+        }
+
+        private void DisplayListOfTasksBasedOnSelectedList()
+        {
+            listOfTasks = GetAllTasksFromDB();
+            WriteTasksOnConsole(listOfTasks);            
+        }
+
+        private void WriteListsOnConsole()
+        {
+            if (availableLists.Count != 0)
+            {
+                Console.Clear();
+                Console.WriteLine("Your Lists");
+                DisplayListsOnConsole(availableLists);
+            }
         }
 
         private void WriteTasksOnConsole(List<TaskDTO> listOfTasks)
@@ -124,19 +199,46 @@ namespace ToDoApp
             if (listOfTasks.Count != 0)
             {
                 Console.Clear();
-                Console.WriteLine("Your tasks");
+                Console.WriteLine("Your tasks in List " + listName);
                 DisplayTasksOnConsole(listOfTasks);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Create tasks in " + listName + " list");
+            }
+
+        }
+
+
+        private void CondtionallyDisplayListMenuOptions()
+        {
+            if(availableLists.Count != 0)
+            {
+                MenuDictionary().Remove(1);
+                MenuDictionary().Add(1, "Create a List");
+                MenuDictionary().Remove(2);
+                MenuDictionary().Add(2, "Open a List");
+                MenuDictionary().Remove(3);
+                MenuDictionary().Add(3, "Exit the App");
+                MenuDictionary().Remove(4);
             }
         }
 
+
+
         private void CondtionallyDisplayUpdateAndCompleteMenuOptions(List<TaskDTO> listOfTasks)
         {
-            if (listOfTasks.Count != 0)
+            if (listOfTasks.Count >= 0)
             {
+                MenuDictionary().Remove(1);
+                MenuDictionary().Add(1, "Create a Task");
+                MenuDictionary().Remove(2);
+                MenuDictionary().Add(2, "Update a Task");
                 MenuDictionary().Remove(3);
-                MenuDictionary().Add(3, "Update a Task");
+                MenuDictionary().Add(3, "Mark Task as Complete");
                 MenuDictionary().Remove(4);
-                MenuDictionary().Add(4, "Mark Task as Complete");
+                MenuDictionary().Add(4, "Return to lists menue");
             }
         }
 

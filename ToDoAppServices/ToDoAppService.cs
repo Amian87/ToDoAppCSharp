@@ -24,9 +24,16 @@ namespace ToDoAppServices
             return list;
         }
 
-        public Task CreateTask(string taskDescription)
+        public List<ListDTO> GetAllLists()
         {
-            var task = _context.Tasks.Add(new Task { TaskDescription = taskDescription, TaskStatus = false});
+            var query = _context.Lists.Select(l => new ListDTO { ListID = l.ListID, ListName = l.ListName });
+            return query.ToList();
+        }
+
+
+        public Task CreateTask(string taskDescription, int listID)
+        {
+            var task = _context.Tasks.Add(new Task { TaskDescription = taskDescription, TaskStatus = false, ListID = listID});
             _context.SaveChanges();
             return task;
         }
@@ -39,16 +46,17 @@ namespace ToDoAppServices
             _context.SaveChanges();
         }
 
-        public List<TaskDTO> GetAllTasks()
+        public List<TaskDTO> GetAllTasksInList(int ListID)
         {
-            var query = _context.Tasks.Select(t => new TaskDTO { TaskDescription = t.TaskDescription, TaskID = t.TaskID, TaskStatus = t.TaskStatus, CompletionDate = t.CompletionDate, ListID = t.ListID });
+            var query = _context.Tasks.Where(t => t.ListID == ListID).Select(t => new TaskDTO { TaskDescription = t.TaskDescription, TaskID = t.TaskID, TaskStatus = t.TaskStatus, CompletionDate = t.CompletionDate, ListID = t.ListID });
             return query.ToList();   
         }
 
-        public void UpdateTask(string taskDescription, int taskID)
+        public void UpdateTask(string taskDescription, int taskID, int ListID)
         {
             var task = _context.Tasks.Where(t => t.TaskID == taskID).FirstOrDefault();
             task.TaskDescription = taskDescription;
+            task.ListID = ListID;
             _context.SaveChanges();
         }
 
