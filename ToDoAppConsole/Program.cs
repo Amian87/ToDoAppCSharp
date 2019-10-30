@@ -9,7 +9,7 @@ namespace ToDoAppConsole
     {
         static void Main(string[] args)
         {          
-            ToDo todo = new ToDo();
+            ToDo todo = new ToDo(new ConsoleIO());
             todo.ToDoAppLoop();
         }
     }

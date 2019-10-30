@@ -9,7 +9,7 @@ namespace ToDoApp
     public class ToDo
     {
         private readonly static ToDoContext context = new ToDoContext();
-        private readonly ToDoAppService tds = new ToDoAppService(context);
+        private readonly ToDoAppService service = new ToDoAppService(context);
         private List<TaskDTO> listOfTasks;
         private List<ListDTO> availableLists = new List<ListDTO>();
         private int listNumber;
@@ -17,62 +17,50 @@ namespace ToDoApp
         private int listID;
         private string listName;
         private bool displayListFlag = false;
-   
+        private IConsoleIO consoleIO;
+        private ToDoConsoleGUI toDoConsoleGUI;
 
-        private readonly Dictionary<int, string> menuDictionary = new Dictionary<int, string>();
-
-        public List<TaskDTO> GetAllTasksFromDB()
+        public ToDo(IConsoleIO cIO)
         {
-            var tasks = tds.GetAllTasksInList(listID);
-            return tasks;
+            consoleIO = cIO;
+            toDoConsoleGUI = new ToDoConsoleGUI();
         }
 
-
-        public void DisplayTasksOnConsole(List<TaskDTO> tasks)
+        public void DisplayTasksOnConsole()
         {
-            int taskNumber = 0;
-
-            for(int i = 0; i < tasks.Count; i++)
+            for(int i = 0; i < listOfTasks.Count; i++)
             {
-                if(tasks[i].TaskStatus == true)
+                if(listOfTasks[i].TaskStatus)
                 {
-                    Console.WriteLine($"{taskNumber + 1} - {tasks[i].TaskDescription} X Completed On {tasks[i].CompletionDate}");
-                    taskNumber += 1;
+                    consoleIO.ConsoleWrite($"{i + 1} - {listOfTasks[i].TaskDescription} X Completed On {listOfTasks[i].CompletionDate}");
                 }
-
-                if (tasks[i].TaskStatus == false)
+                else
                 {
-                    Console.WriteLine($"{taskNumber + 1} - {tasks[i].TaskDescription}");
-                    taskNumber += 1;
+                    consoleIO.ConsoleWrite($"{i + 1} - {listOfTasks[i].TaskDescription}");
                 }
             }
         }
 
-        public void DisplayListsOnConsole(List<ListDTO> list)
+        public void DisplayListsOnConsole()
         {
-            for(int i = 0; i < list.Count; i++)
+            foreach(string listItem in toDoConsoleGUI.FormatListNames(availableLists))
             {
-                Console.WriteLine($"{i + 1} - {list[i].ListName}");
+                consoleIO.ConsoleWrite(listItem);
             }
         }
 
-        public Dictionary<int, string> MenuDictionary()
-        {
-            return menuDictionary;
-        }
-
-        public void DisplayMenuOptionsOnConsole()
+        public void DisplayMenuOptionsOnConsole(Dictionary<int,string> menuDictionary)
         {
             foreach (var (menuNumber, menuOption) in menuDictionary)
             {
-                Console.WriteLine($"{menuNumber} - {menuOption}");
+                consoleIO.ConsoleWrite($"{menuNumber} - {menuOption}");
             }
         }
 
         public void UpdateTask(int taskNumber, string taskDescription, List<TaskDTO> listOfTasks)
         {
             int taskID = listOfTasks[taskNumber - 1].TaskID;
-            tds.UpdateTask(taskDescription, taskID, listID);
+            service.UpdateTask(taskDescription, taskID, listID);
         }
 
 
@@ -81,26 +69,26 @@ namespace ToDoApp
             bool status = true;
             int userTaskNumberInput;
 
-            Console.WriteLine("Welcome To The To-Do App");
+            consoleIO.ConsoleWrite("Welcome To The To-Do App");
                
             while (status == true)
             {
-                availableLists = tds.GetAllLists();
+                availableLists = service.GetAllLists();
                 WriteListsOnConsole();
 
                 if (userInput == "1" && displayListFlag == false)
                 {
-                    Console.Write("Create a List >> ");
-                    userInput = Console.ReadLine().ToString();
-                    tds.CreateList(userInput);
+                    consoleIO.ConsoleWrite("Create a List >> ");
+                    userInput = consoleIO.ConsoleRead();
+                    service.CreateList(userInput);
                 }
 
                 else if (userInput == "2" && displayListFlag == false)
                 {
-                    Console.Write("Select the list number >> ");
+                    consoleIO.ConsoleWrite("Select the list number >> ");
                     displayListFlag = true;
 
-                    if (Int32.TryParse(Console.ReadLine(), out listNumber) && listNumber <= availableLists.Count)
+                    if (Int32.TryParse(consoleIO.ConsoleRead(), out listNumber) && listNumber <= availableLists.Count)
                     {
                         listID = availableLists[listNumber - 1].ListID;
                         listName = availableLists[listNumber - 1].ListName;
@@ -109,136 +97,91 @@ namespace ToDoApp
                 }
                 else if (userInput == "1" && displayListFlag == true)
                 {
-                    Console.Write("Create a task >> ");
-                    userInput = Console.ReadLine().ToString();
+                    consoleIO.ConsoleWrite("Create a task >> ");
+                    userInput = consoleIO.ConsoleRead();
                     if (userInput != "")
                     {
-                        tds.CreateTask(userInput, listID);
+                        service.CreateTask(userInput, listID);
                     }
 
                 }
                 else if (userInput == "2" && listOfTasks.Count != 0 && displayListFlag == true)
                 {
-                    Console.WriteLine("Which task number would you like to update?");
-                    if (Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
+                    consoleIO.ConsoleWrite("Which task number would you like to update?");
+                    if (Int32.TryParse(consoleIO.ConsoleRead(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
                     {
-                        Console.Write("Update task number " + userTaskNumberInput + " >> ");
-                        userInput = Console.ReadLine();
+                        consoleIO.ConsoleWrite("Update task number " + userTaskNumberInput + " >> ");
+                        userInput = consoleIO.ConsoleRead();
                         UpdateTask(userTaskNumberInput, userInput, listOfTasks);
                     }
                 }
-                else if (userInput == "3" && listOfTasks.Count != 0 && displayListFlag == true )
+                else if (userInput == "3"  && displayListFlag == true )
                 {
-                    Console.WriteLine("Which task number would you like to mark as complete?");
-                    if (Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
+                    consoleIO.ConsoleWrite("Which task number would you like to mark as complete?");
+                    if (Int32.TryParse(consoleIO.ConsoleRead(), out userTaskNumberInput) && userTaskNumberInput <= listOfTasks.Count)
                     {
-                        if (listOfTasks[userTaskNumberInput - 1].TaskStatus != true)
+
+                        if (listOfTasks[userTaskNumberInput - 1].TaskStatus == false)
                         {
                             int taskID = listOfTasks[userTaskNumberInput - 1].TaskID;
-                            tds.CompleteTask(taskID);
+                            service.CompleteTask(taskID);
                         }
 
                     }
 
                 }
 
-
-
-                else if (userInput == "3" )
+                else if (userInput == "3" && displayListFlag == false)
                 {
                     status = false;
                 }
 
-                else if (userInput == "4")
+                else if (userInput == "4" && displayListFlag == true)
                 {
                     displayListFlag = false;
                 }
-
-
             }
-
         }
-
-
 
         private void WriteListsOnConsole()
         {
             if (availableLists.Count >= 0 && displayListFlag == false)
             {
-                Console.Clear();
-                Console.WriteLine("Your Lists");
-                DisplayListsOnConsole(availableLists);
-                CondtionallyDisplayListMenuOptions();
-                Console.WriteLine("To-Do App Menu");
-                DisplayMenuOptionsOnConsole();
-                Console.Write("Select option number from the menu >> ");
-                userInput = Console.ReadLine().ToString();
+                consoleIO.ConsoleClear();
+                consoleIO.ConsoleWrite("Your Lists");
+                DisplayListsOnConsole();
+                consoleIO.ConsoleWrite("To-Do App Menu");
+                DisplayMenuOptionsOnConsole(toDoConsoleGUI.ListMenuOptions());
             }
             else
             {
                 DisplayListOfTasksBasedOnSelectedList();
-                CondtionallyDisplayUpdateAndCompleteMenuOptions();
-                Console.WriteLine("To-Do App Menu");
-                DisplayMenuOptionsOnConsole();
-                Console.Write("Select option number from the menu >> ");
-                userInput = Console.ReadLine().ToString();
-
+                consoleIO.ConsoleWrite("To-Do App Menu");
+                DisplayMenuOptionsOnConsole(toDoConsoleGUI.TaskMenuOptions());
             }
+            consoleIO.ConsoleWriteInLine("Select option number from the menu >> ");
+            userInput = consoleIO.ConsoleRead();
         }
 
         private void DisplayListOfTasksBasedOnSelectedList()
         {
-            listOfTasks = GetAllTasksFromDB();
-            WriteTasksOnConsole(listOfTasks);            
+            listOfTasks = service.GetAllTasksInList(listID);
+            WriteTasksOnConsole();
         }
 
-        private void WriteTasksOnConsole(List<TaskDTO> listOfTasks)
+        private void WriteTasksOnConsole()
         {
             if (listOfTasks.Count != 0)
             {
-                Console.Clear();
-                Console.WriteLine("Your tasks in List " + listName);
-                DisplayTasksOnConsole(listOfTasks);
+                consoleIO.ConsoleClear();
+                consoleIO.ConsoleWrite("Your tasks in List " + listName);
+                DisplayTasksOnConsole();
             }
             else
             {
-                Console.Clear();
-                Console.WriteLine("Create tasks in " + listName + " list");
-            }
-
-        }
-
-
-        private void CondtionallyDisplayListMenuOptions()
-        {
-            if(availableLists.Count >= 0)
-            {
-                MenuDictionary().Remove(1);
-                MenuDictionary().Add(1, "Create a List");
-                MenuDictionary().Remove(2);
-                MenuDictionary().Add(2, "Open a List");
-                MenuDictionary().Remove(3);
-                MenuDictionary().Add(3, "Exit the App");
-                MenuDictionary().Remove(4);
+                consoleIO.ConsoleClear();
+                consoleIO.ConsoleWrite("Create tasks in " + listName + " list");
             }
         }
-
-
-
-        private void CondtionallyDisplayUpdateAndCompleteMenuOptions()
-        {
-            if (listOfTasks.Count >= 0)
-            {
-                MenuDictionary().Remove(1);
-                MenuDictionary().Add(1, "Create a Task");
-                MenuDictionary().Remove(2);
-                MenuDictionary().Add(2, "Update a Task");
-                MenuDictionary().Remove(3);
-                MenuDictionary().Add(3, "Mark Task as Complete");
-                MenuDictionary().Remove(4);
-                MenuDictionary().Add(4, "Return to lists menu");
-            }
-        }
-
     }
 }

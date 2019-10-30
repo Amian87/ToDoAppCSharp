@@ -6,12 +6,13 @@ namespace ToDoAppTests
 {
     public class ToDoTests
     {
-        private ToDo todo;
-
-        [SetUp]
-        public void SetUP()
+        [Test]
+        public void GoesThroughTheToDoLoop()
         {
-            todo = new ToDo();
+            MockConsoleIO consoleIO = new MockConsoleIO();
+            ToDo todo = new ToDo(consoleIO);
+            todo.ToDoAppLoop();
+            Assert.IsTrue(true);
         }
 
         //[Test]
