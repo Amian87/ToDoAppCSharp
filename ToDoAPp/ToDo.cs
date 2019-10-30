@@ -16,6 +16,7 @@ namespace ToDoApp
         private string userInput;
         private int listID;
         private string listName;
+        private bool displayListFlag = false;
    
 
         private readonly Dictionary<int, string> menuDictionary = new Dictionary<int, string>();
@@ -78,120 +79,137 @@ namespace ToDoApp
 
         public void ToDoAppLoop()
         {
-            bool listMenu = true;
-            bool taskMenu = true;
+            bool status = true;
             int userTaskNumberInput;
 
             Console.WriteLine("Welcome To The To-Do App");
                
-            while (listMenu == true)
+            while (status == true)
             {
                 availableLists = tds.GetAllLists();
-                
                 WriteListsOnConsole();
-                CondtionallyDisplayListMenuOptions();
-                Console.WriteLine("To-Do App Menu");
-                DisplayMenuOptionsOnConsole();
-                Console.Write("Select option number from the menu >> ");
-                userInput = Console.ReadLine().ToString();
+                //CondtionallyDisplayListMenuOptions();
+                //Console.WriteLine("To-Do App Menu");
+                //DisplayMenuOptionsOnConsole();
+                //Console.Write("Select option number from the menu >> ");
+                //userInput = Console.ReadLine().ToString();
 
-                if (userInput == "1")
+                if (userInput == "1" && displayListFlag == false)
                 {
                     Console.Write("Create a List >> ");
                     userInput = Console.ReadLine().ToString();
                     tds.CreateList(userInput);
                 }
 
-                else if (userInput == "3")
-                {
-                    listMenu = false;
-                }
-
-                if (userInput == "2")
+                else if (userInput == "2" && displayListFlag == false)
                 {
                     Console.Write("Select the list number >> ");
+                    displayListFlag = true;
 
-                    while (taskMenu)
+                    if (Int32.TryParse(Console.ReadLine(), out listNumber) && listNumber <= availableLists.Count)
                     {
-          
-                        if (Int32.TryParse(Console.ReadLine(), out listNumber) && listNumber <= availableLists.Count)
-                        {
-                            listID = availableLists[listNumber - 1].ListID;
-                            listName = availableLists[listNumber - 1].ListName;
-                            displayTasksAfterOptionSelected();
-                        }
-                        else if (userInput == "4")
-                        {
-                            taskMenu = false;
-                        }
-                        if (userInput == "1")
-                        {
-                            Console.Write("Create a task >> ");
-                            userInput = Console.ReadLine().ToString();
-                            if (userInput != "")
-                            {
-                                tds.CreateTask(userInput, listID);
-                                 displayTasksAfterOptionSelected();
-                            }
-
-                        }
-                        else if (userInput == "2" && listOfTasks.Count != 0)
-                        {
-                            Console.WriteLine("Which task number would you like to update?");
-                            if (Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
-                            {
-                                Console.Write("Update task number " + userTaskNumberInput + " >> ");
-                                userInput = Console.ReadLine();
-                                UpdateTask(userTaskNumberInput, userInput, listOfTasks);
-                                displayTasksAfterOptionSelected();
-                            }
-                        }
-                        else if (userInput == "3" && listOfTasks.Count != 0)
-                        {
-                            Console.WriteLine("Which task number would you like to mark as complete?");
-                            if (Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
-                            {
-                                if (listOfTasks[userTaskNumberInput - 1].TaskStatus != true)
-                                {
-                                    int taskID = listOfTasks[userTaskNumberInput - 1].TaskID;
-                                    tds.CompleteTask(taskID);
-                                    displayTasksAfterOptionSelected();
-                                }
-
-                            }
-                        }
+                        listID = availableLists[listNumber - 1].ListID;
+                        listName = availableLists[listNumber - 1].ListName;
+                       
                     }
-           
                 }
-    
+                else if (userInput == "1" && displayListFlag == true)
+                {
+                    Console.Write("Create a task >> ");
+                    userInput = Console.ReadLine().ToString();
+                    if (userInput != "")
+                    {
+                        tds.CreateTask(userInput, listID);
+                        //displayTasksAfterOptionSelected();
+                    }
+
+                }
+                else if (userInput == "2" && listOfTasks.Count != 0 && displayListFlag == true)
+                {
+                    Console.WriteLine("Which task number would you like to update?");
+                    if (Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
+                    {
+                        Console.Write("Update task number " + userTaskNumberInput + " >> ");
+                        userInput = Console.ReadLine();
+                        UpdateTask(userTaskNumberInput, userInput, listOfTasks);
+                        //displayTasksAfterOptionSelected();
+                    }
+                }
+                else if (userInput == "3" && listOfTasks.Count != 0 && displayListFlag == true )
+                {
+                    Console.WriteLine("Which task number would you like to mark as complete?");
+                    if (Int32.TryParse(Console.ReadLine(), out userTaskNumberInput) && userTaskNumberInput < listOfTasks.Count)
+                    {
+                        if (listOfTasks[userTaskNumberInput - 1].TaskStatus != true)
+                        {
+                            int taskID = listOfTasks[userTaskNumberInput - 1].TaskID;
+                            tds.CompleteTask(taskID);
+                            //displayTasksAfterOptionSelected();
+                        }
+
+                    }
+
+                }
+
+
+
+                else if (userInput == "3" )
+                {
+                    status = false;
+                }
+
+                else if (userInput == "4")
+                {
+                    displayListFlag = false;
+                }
+
+
             }
 
         }
 
-        private void displayTasksAfterOptionSelected()
+
+
+        private void WriteListsOnConsole()
         {
-            DisplayListOfTasksBasedOnSelectedList();
-            Console.WriteLine("To-Do App Menu");
-            CondtionallyDisplayUpdateAndCompleteMenuOptions(listOfTasks);
-            DisplayMenuOptionsOnConsole();
-            Console.Write("Select option number from the menu >> ");
-            userInput = Console.ReadLine().ToString();
+            if (availableLists.Count != 0 && displayListFlag == false)
+            {
+                Console.Clear();
+                Console.WriteLine("Your Lists");
+                DisplayListsOnConsole(availableLists);
+                CondtionallyDisplayListMenuOptions();
+                Console.WriteLine("To-Do App Menu");
+                DisplayMenuOptionsOnConsole();
+                Console.Write("Select option number from the menu >> ");
+                userInput = Console.ReadLine().ToString();
+            }
+            else
+            {
+                DisplayListOfTasksBasedOnSelectedList();
+                CondtionallyDisplayUpdateAndCompleteMenuOptions();
+                Console.WriteLine("To-Do App Menu");
+                DisplayMenuOptionsOnConsole();
+                Console.Write("Select option number from the menu >> ");
+                userInput = Console.ReadLine().ToString();
+
+            }
         }
+
+
+        //private void displayTasksAfterOptionSelected()
+        //{
+        //    
+        //   // Console.WriteLine("To-Do App Menu");
+        //    CondtionallyDisplayUpdateAndCompleteMenuOptions(listOfTasks);
+        //    //DisplayMenuOptionsOnConsole();
+        //    //Console.Write("Select option number from the menu >> ");
+        //    //userInput = Console.ReadLine().ToString();
+        //}
 
         private void DisplayListOfTasksBasedOnSelectedList()
         {
             listOfTasks = GetAllTasksFromDB();
             WriteTasksOnConsole(listOfTasks);            
-        }
-
-        private void WriteListsOnConsole()
-        {
-            if (availableLists.Count != 0)
-            {
-                Console.Clear();
-                Console.WriteLine("Your Lists");
-                DisplayListsOnConsole(availableLists);
-            }
         }
 
         private void WriteTasksOnConsole(List<TaskDTO> listOfTasks)
@@ -227,7 +245,7 @@ namespace ToDoApp
 
 
 
-        private void CondtionallyDisplayUpdateAndCompleteMenuOptions(List<TaskDTO> listOfTasks)
+        private void CondtionallyDisplayUpdateAndCompleteMenuOptions()
         {
             if (listOfTasks.Count >= 0)
             {
@@ -238,7 +256,7 @@ namespace ToDoApp
                 MenuDictionary().Remove(3);
                 MenuDictionary().Add(3, "Mark Task as Complete");
                 MenuDictionary().Remove(4);
-                MenuDictionary().Add(4, "Return to lists menue");
+                MenuDictionary().Add(4, "Return to lists menu");
             }
         }
 
