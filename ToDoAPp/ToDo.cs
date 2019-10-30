@@ -23,7 +23,6 @@ namespace ToDoApp
 
         public List<TaskDTO> GetAllTasksFromDB()
         {
-            
             var tasks = tds.GetAllTasksInList(listID);
             return tasks;
         }
@@ -88,11 +87,6 @@ namespace ToDoApp
             {
                 availableLists = tds.GetAllLists();
                 WriteListsOnConsole();
-                //CondtionallyDisplayListMenuOptions();
-                //Console.WriteLine("To-Do App Menu");
-                //DisplayMenuOptionsOnConsole();
-                //Console.Write("Select option number from the menu >> ");
-                //userInput = Console.ReadLine().ToString();
 
                 if (userInput == "1" && displayListFlag == false)
                 {
@@ -120,7 +114,6 @@ namespace ToDoApp
                     if (userInput != "")
                     {
                         tds.CreateTask(userInput, listID);
-                        //displayTasksAfterOptionSelected();
                     }
 
                 }
@@ -132,7 +125,6 @@ namespace ToDoApp
                         Console.Write("Update task number " + userTaskNumberInput + " >> ");
                         userInput = Console.ReadLine();
                         UpdateTask(userTaskNumberInput, userInput, listOfTasks);
-                        //displayTasksAfterOptionSelected();
                     }
                 }
                 else if (userInput == "3" && listOfTasks.Count != 0 && displayListFlag == true )
@@ -144,7 +136,6 @@ namespace ToDoApp
                         {
                             int taskID = listOfTasks[userTaskNumberInput - 1].TaskID;
                             tds.CompleteTask(taskID);
-                            //displayTasksAfterOptionSelected();
                         }
 
                     }
@@ -172,7 +163,7 @@ namespace ToDoApp
 
         private void WriteListsOnConsole()
         {
-            if (availableLists.Count != 0 && displayListFlag == false)
+            if (availableLists.Count >= 0 && displayListFlag == false)
             {
                 Console.Clear();
                 Console.WriteLine("Your Lists");
@@ -194,17 +185,6 @@ namespace ToDoApp
 
             }
         }
-
-
-        //private void displayTasksAfterOptionSelected()
-        //{
-        //    
-        //   // Console.WriteLine("To-Do App Menu");
-        //    CondtionallyDisplayUpdateAndCompleteMenuOptions(listOfTasks);
-        //    //DisplayMenuOptionsOnConsole();
-        //    //Console.Write("Select option number from the menu >> ");
-        //    //userInput = Console.ReadLine().ToString();
-        //}
 
         private void DisplayListOfTasksBasedOnSelectedList()
         {
@@ -231,7 +211,7 @@ namespace ToDoApp
 
         private void CondtionallyDisplayListMenuOptions()
         {
-            if(availableLists.Count != 0)
+            if(availableLists.Count >= 0)
             {
                 MenuDictionary().Remove(1);
                 MenuDictionary().Add(1, "Create a List");
