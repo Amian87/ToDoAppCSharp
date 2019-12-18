@@ -6,10 +6,12 @@ using static ToDoAppDomain.Classes.DomainClasses;
 
 namespace ToDoApp
 {
+
+
     public class ToDo
     {
         private readonly static ToDoContext context = new ToDoContext();
-        private readonly ToDoAppService service = new ToDoAppService(context);
+        private readonly IToDoAppService service;
         private List<TaskDTO> listOfTasks;
         private List<ListDTO> availableLists = new List<ListDTO>();
         private int listNumber;
@@ -20,8 +22,9 @@ namespace ToDoApp
         private IConsoleIO consoleIO;
         private ToDoConsoleGUI toDoConsoleGUI;
 
-        public ToDo(IConsoleIO cIO)
+        public ToDo(IConsoleIO cIO, IToDoAppService service = null)
         {
+            this.service = service ?? new ToDoAppService(context);
             consoleIO = cIO;
             toDoConsoleGUI = new ToDoConsoleGUI();
         }
@@ -76,11 +79,9 @@ namespace ToDoApp
                 availableLists = service.GetAllLists();
                 WriteListsOnConsole();
 
-                if (userInput == "1" && displayListFlag == false)
+                if (ShouldCreateList())
                 {
-                    consoleIO.ConsoleWrite("Create a List >> ");
-                    userInput = consoleIO.ConsoleRead();
-                    service.CreateList(userInput);
+                    CreateList();
                 }
 
                 else if (userInput == "2" && displayListFlag == false)
@@ -141,6 +142,18 @@ namespace ToDoApp
                     displayListFlag = false;
                 }
             }
+        }
+
+        private void CreateList()
+        {
+            consoleIO.ConsoleWrite("Create a List >> ");
+            userInput = consoleIO.ConsoleRead();
+            service.CreateList(userInput);
+        }
+
+        private bool ShouldCreateList()
+        {
+            return userInput == "1" && displayListFlag == false;
         }
 
         private void WriteListsOnConsole()

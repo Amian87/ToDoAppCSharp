@@ -6,7 +6,7 @@ using ToDoAppDomain.Classes;
 
 namespace ToDoAppServices
 {
-    public class ToDoAppService
+    public class ToDoAppService : IToDoAppService
     {
         private readonly ToDoContext _context;
 
